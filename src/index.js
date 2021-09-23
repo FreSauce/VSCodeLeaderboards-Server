@@ -55,7 +55,7 @@ client.on("messageCreate", async (message) => {
                 { name: "Top users", value: userNames, inline: true },
                 { name: "Minutes spent", value: time_spent, inline: true }
             );
-        message.channel.send(embed);
+        message.channel.send({ embeds: [embed] });
         return;
     }
 });
