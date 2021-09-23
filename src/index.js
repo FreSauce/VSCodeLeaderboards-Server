@@ -1,10 +1,8 @@
 const Discord = require("discord.js");
-const token = "ODUwNjM5NDE2NjY5MTEwMjcy.YLspsQ.N3unby0Wv2dGjEn7nexxtvJadhk";
 const intents = new Discord.Intents(32767);
 const client = new Discord.Client({ intents });
 const { getUsers, addUser, sendTick } = require("./db");
 const { io } = require("../main");
-
 io.on("connection", (socket) => {
     socket.on("sendTick", (data) => {
         sendTick(data);
@@ -39,4 +37,4 @@ client.on("messageCreate", async (message) => {
     }
 });
 
-client.login(token);
+client.login(process.env.TOKEN);
