@@ -1,5 +1,6 @@
 const Discord = require("discord.js");
 const intents = new Discord.Intents(32767);
+console.log(process.env.TOKEN);
 const client = new Discord.Client({ intents });
 const { getUsers, addUser, sendTick } = require("./db");
 const { io } = require("../main");
