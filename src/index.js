@@ -45,7 +45,7 @@ client.on("messageCreate", async (message) => {
             time_spent += `\`${data.activityTime/60000}\`\n`;
         }
 
-        const embed = new MessageEmbed()
+        const embed = new Discord.MessageEmbed()
             .setAuthor(
                 `Leaderboard for ${message.guild.name}`,
                 message.guild.iconURL({ dynamic: true })
