@@ -14,7 +14,6 @@ io.on("connection", (socket) => {
     });
 });
 
-
 client.on("ready", async () => {
     console.log("Ready!");
     client.user.setActivity("I AINT DEAD YET");
@@ -29,12 +28,37 @@ client.on("messageCreate", async (message) => {
         // console.log(userList);
         const leaderboard = await getUsers(userList);
         // message.channel.send(userList)
-        console.log("In index file");
-        str = "";
+        // console.log("In index file");
+        // str = "";
+        // for (let i = 0; i < leaderboard.length; i++) {
+        //     str += `${leaderboard[i].userName} has  spent ${
+        //         leaderboard[i].activityTime / 1000
+        //     } seconds\n`;
+        // }
+        // message.channel.send(str);
+
+        let userNames = "";
+        let time_spent = "";
         for (let i = 0; i < leaderboard.length; i++) {
-            str += `${leaderboard[i].userName} has ${leaderboard[i].activityTime} points\n`;
+            const data = leaderboard[i];
+            const user = data.userName;
+
+            userNames += `\`${i + 1}\` ${user}\n`;
+            time_spent += `\`${data.activityTime}\`\n`;
         }
-        message.channel.send(str);
+
+        const embed = new MessageEmbed()
+            .setAuthor(
+                `Leaderboard for ${message.guild.name}`,
+                message.guild.iconURL({ dynamic: true })
+            )
+            .setColor(0x51267)
+            .addFields(
+                { name: "Top users", value: userNames, inline: true },
+                { name: "Minutes spent", value: time_spent, inline: true }
+            );
+        message.channel.send(embed);
+        return;
     }
 });
 
