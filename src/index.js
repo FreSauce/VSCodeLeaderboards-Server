@@ -41,10 +41,8 @@ client.on("messageCreate", async (message) => {
         let time_spent = "";
         for (let i = 0; i < leaderboard.length; i++) {
             const data = leaderboard[i];
-            const user = data.userName;
-
-            userNames += `\`${i + 1}\` ${user}\n`;
-            time_spent += `\`${data.activityTime}\`\n`;
+            userNames += `\`${i + 1}\` ${data.userName}\n`;
+            time_spent += `\`${data.activityTime/60000}\`\n`;
         }
 
         const embed = new MessageEmbed()
