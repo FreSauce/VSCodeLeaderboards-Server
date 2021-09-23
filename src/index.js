@@ -16,12 +16,11 @@ io.on("connection", (socket) => {
 
 client.on("ready", async () => {
     console.log("Ready!");
-    client.user.setActivity("I AINT DEAD YET");
+    client.user.setActivity("I am watching you all");
 });
 
 client.on("messageCreate", async (message) => {
-    if (message.content === "!users") {
-        message.channel.send("Fetching data");
+    if (message.content === "#vslb") {
         const userList = await (
             await message.guild.members.fetch()
         ).map((member) => member.id);
@@ -36,13 +35,16 @@ client.on("messageCreate", async (message) => {
         //     } seconds\n`;
         // }
         // message.channel.send(str);
-
+        leaderboard.sort((a, b) => {
+            return a.activityTime - b.activityTime;
+        });
+        
         let userNames = "";
         let time_spent = "";
         for (let i = 0; i < leaderboard.length; i++) {
             const data = leaderboard[i];
             userNames += `\`${i + 1}\` ${data.userName}\n`;
-            time_spent += `\`${data.activityTime/60000}\`\n`;
+            time_spent += ` \`${(data.activityTime/60000).toFixed(2)}\`\n`;
         }
 
         const embed = new Discord.MessageEmbed()
@@ -50,12 +52,12 @@ client.on("messageCreate", async (message) => {
                 `Leaderboard for ${message.guild.name}`,
                 message.guild.iconURL({ dynamic: true })
             )
-            .setColor(0x51267)
+            .setColor(0xE1ABFB)
             .addFields(
                 { name: "Top users", value: userNames, inline: true },
                 { name: "Minutes spent", value: time_spent, inline: true }
             );
-        message.channel.send({ embeds: [embed] });
+        message.reply({ embeds: [embed] });
         return;
     }
 });
