@@ -39,4 +39,10 @@ const getUsers = async (serverlist) => {
     return res;
 }
 
-module.exports = { addUser, sendTick, getUsers };
+const getGlobalUsers = async () => {
+    const collection = client.db("userdata").collection("users");
+    const res = await (await collection.find({})).toArray();
+    return res;
+}
+
+module.exports = { addUser, sendTick, getUsers, getGlobalUsers };

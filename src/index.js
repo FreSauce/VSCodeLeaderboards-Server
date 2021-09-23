@@ -2,7 +2,7 @@ const Discord = require("discord.js");
 const intents = new Discord.Intents(32767);
 console.log(process.env.TOKEN);
 const client = new Discord.Client({ intents });
-const { getUsers, addUser, sendTick } = require("./db");
+const { getUsers, addUser, sendTick, getGlobalUsers } = require("./db");
 const { io } = require("../main");
 io.on("connection", (socket) => {
     socket.on("sendTick", (data) => {
@@ -20,25 +20,20 @@ client.on("ready", async () => {
 });
 
 client.on("messageCreate", async (message) => {
-    if (message.content === "#vslb") {
+    if (message.content.startsWith("#vslb")) {
+        const msg = message.content.split(" ");
+        if (msg.length === 1) {
         const userList = await (
             await message.guild.members.fetch()
         ).map((member) => member.id);
-        // console.log(userList);
         const leaderboard = await getUsers(userList);
-        // message.channel.send(userList)
-        // console.log("In index file");
-        // str = "";
-        // for (let i = 0; i < leaderboard.length; i++) {
-        //     str += `${leaderboard[i].userName} has  spent ${
-        //         leaderboard[i].activityTime / 1000
-        //     } seconds\n`;
-        // }
-        // message.channel.send(str);
+        }
+        else if (msg.length === 2 && msg[1] === "global") {
+            const leaderboard = await getGlobalUsers();
+        }
         leaderboard.sort((a, b) => {
-            return a.activityTime - b.activityTime;
+            return b.activityTime - a.activityTime;
         });
-        
         let userNames = "";
         let time_spent = "";
         for (let i = 0; i < leaderboard.length; i++) {
