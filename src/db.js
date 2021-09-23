@@ -1,5 +1,4 @@
 const client = require('./mongoConnect');
-require("dotenv").config();
 
 
 const addUser = async (data) => {

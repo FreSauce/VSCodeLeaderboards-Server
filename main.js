@@ -5,7 +5,7 @@ const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server);
 
-server.get("/", (req, res)=> {
+app.get("/", (req, res)=> {
   res.send({port: process.env.PORT})
 })
 
