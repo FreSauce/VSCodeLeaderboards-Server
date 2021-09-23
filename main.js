@@ -5,8 +5,13 @@ const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server);
 
-server.listen(3000, () => {
-  console.log('listening on *:6000');
+server.get("/", (req, res)=> {
+  res.send({port: process.env.PORT})
+})
+
+
+server.listen(process.env.PORT, () => {
+  console.log('listening on *:'+ process.env.PORT);
 });
 
 module.exports = {io};

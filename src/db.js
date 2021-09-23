@@ -36,7 +36,7 @@ const getUsers = async (serverlist) => {
     const collection = client.db("userdata").collection("users");
     // console.log(serverlist);
     const res = await (await collection.find({ userId: { $in: serverlist } })).toArray();
-    console.log(res);
+    // console.log(res);
     return res;
 }
 
