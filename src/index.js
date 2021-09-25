@@ -64,7 +64,7 @@ client.on("messageCreate", async (message) => {
             return b.activityTime - a.activityTime;
         });
         let pages = paginated(leaderboard, 10, false, message);
-        const buttonPaginator = new ButtonPaginator({ pages });
+        const buttonPaginator = new ButtonPaginator(message.channel, { pages });
         await buttonPaginator.send();
         return;
     }
