@@ -19,11 +19,11 @@ const paginated = (leaderboard, pageLength, isGlobal, message) => {
         let time_spent = "";
         for (
             let j = pageLength * i;
-            j < Math.min(pageLength, lblen - i * pageLength);
+            j < Math.min((i+1)*pageLength, lblen);
             j++
         ) {
-            const data = leaderboard[i * pageLength + j];
-            userNames += `\`${i * pageLength + j + 1}\` ${data.userName}\n`;
+            const data = leaderboard[j];
+            userNames += `\`${j + 1}\` ${data.userName}\n`;
             time_spent += ` \`${(data.activityTime / 60000).toFixed(2)}\`\n`;
         }
         const pageEmbed = new Discord.MessageEmbed()
@@ -37,6 +37,17 @@ const paginated = (leaderboard, pageLength, isGlobal, message) => {
     }
     return pages;
 };
+
+const buttons = [
+    new Discord.MessageButton()
+            .setCustomId("previousbtn")
+            .setLabel("Previous")
+            .setStyle("DANGER"),
+    new Discord.MessageButton()
+            .setCustomId("nextbtn")
+            .setLabel("Next")
+            .setStyle("SUCCESS")
+]
 
 io.on("connection", (socket) => {
     socket.on("sendTick", (data) => {
@@ -63,17 +74,8 @@ client.on("messageCreate", async (message) => {
         leaderboard.sort((a, b) => {
             return b.activityTime - a.activityTime;
         });
-        const button1 = new Discord.MessageButton()
-            .setCustomId("previousbtn")
-            .setLabel("Previous")
-            .setStyle("DANGER");
-
-        const button2 = new Discord.MessageButton()
-            .setCustomId("nextbtn")
-            .setLabel("Next")
-            .setStyle("SUCCESS");
         let pages = paginated(leaderboard, 10, false, message);
-        paginationEmbed(message, pages, [button1, button2], 10000)
+        paginationEmbed(message, pages, buttons, 10000)
         return;
     }
 
@@ -83,16 +85,8 @@ client.on("messageCreate", async (message) => {
             return b.activityTime - a.activityTime;
         });
         let pages = paginated(leaderboard, 10, true, message);
-        const button1 = new Discord.MessageButton()
-            .setCustomId("previousbtn")
-            .setLabel("Previous")
-            .setStyle("DANGER");
-
-        const button2 = new Discord.MessageButton()
-            .setCustomId("nextbtn")
-            .setLabel("Next")
-            .setStyle("SUCCESS");
-        paginationEmbed(message, pages, [button1, button2], 10000)
+        console.log(pages);
+        paginationEmbed(message, pages, buttons, 10000)
         return;
     }
 });
