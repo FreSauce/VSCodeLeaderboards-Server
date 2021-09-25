@@ -19,7 +19,7 @@ const paginated = (leaderboard, pageLength, isGlobal, message) => {
         let time_spent = "";
         for (
             let j = pageLength * i;
-            j < min(pageLength, lblen - i * pageLength);
+            j < Math.min(pageLength, lblen - i * pageLength);
             j++
         ) {
             const data = leaderboard[i * pageLength + j];
