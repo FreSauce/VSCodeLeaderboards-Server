@@ -6,11 +6,11 @@ const { getUsers, addUser, sendTick, getGlobalUsers } = require("./db");
 const { io } = require("../main");
 const { ButtonPaginator } = require("@psibean/discord.js-pagination");
 
-const paginated = (leaderboard, pageLength, isGlobal, messsage) => {
+const paginated = (leaderboard, pageLength, isGlobal, message) => {
     const pages = [];
     const author = isGlobal
         ? "Global Leaderboards"
-        : `Leaderboards for ${messsage.guild.name}`;
+        : `Leaderboards for ${message.guild.name}`;
     const iconURL = message.guild.iconURL({ dynamic: true });
     const lblen = leaderboard.length;
     const pageCount = Math.ceil(lblen / pageLength);
