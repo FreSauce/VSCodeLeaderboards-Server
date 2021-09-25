@@ -4,7 +4,7 @@ console.log(process.env.TOKEN);
 const client = new Discord.Client({ intents });
 const { getUsers, addUser, sendTick, getGlobalUsers } = require("./db");
 const { io } = require("../main");
-const { ButtonPaginator } = require("@psibean/discord.js-pagination");
+const paginationEmbed = require('discordjs-button-pagination');
 
 const paginated = (leaderboard, pageLength, isGlobal, message) => {
     const pages = [];
@@ -63,9 +63,17 @@ client.on("messageCreate", async (message) => {
         leaderboard.sort((a, b) => {
             return b.activityTime - a.activityTime;
         });
+        const button1 = new Discord.MessageButton()
+            .setCustomId("previousbtn")
+            .setLabel("Previous")
+            .setStyle("DANGER");
+
+        const button2 = new Discord.MessageButton()
+            .setCustomId("nextbtn")
+            .setLabel("Next")
+            .setStyle("SUCCESS");
         let pages = paginated(leaderboard, 10, false, message);
-        const buttonPaginator = new ButtonPaginator(message.channel, { pages });
-        await buttonPaginator.send();
+        paginationEmbed(message, pages, [button1, button2], 10000)
         return;
     }
 
@@ -75,8 +83,16 @@ client.on("messageCreate", async (message) => {
             return b.activityTime - a.activityTime;
         });
         let pages = paginated(leaderboard, 10, true, message);
-        const buttonPaginator = new ButtonPaginator(interaction, { pages });
-        await buttonPaginator.send();
+        const button1 = new Discord.MessageButton()
+            .setCustomId("previousbtn")
+            .setLabel("Previous")
+            .setStyle("DANGER");
+
+        const button2 = new Discord.MessageButton()
+            .setCustomId("nextbtn")
+            .setLabel("Next")
+            .setStyle("SUCCESS");
+        paginationEmbed(message, pages, [button1, button2], 10000)
         return;
     }
 });
