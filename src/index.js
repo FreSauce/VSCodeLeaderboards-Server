@@ -23,7 +23,7 @@ const paginated = (leaderboard, pageLength, isGlobal, message) => {
             j++
         ) {
             const data = leaderboard[j];
-            userNames += `\`${j + 1}\` ${data.userName}\n`;
+            userNames += `\`${j + 1}\` ${data.userName}\n`;  
             time_spent += ` \`${(data.activityTime / 60000).toFixed(2)}\`\n`;
         }
         const pageEmbed = new Discord.MessageEmbed()
@@ -75,7 +75,7 @@ client.on("messageCreate", async (message) => {
             return b.activityTime - a.activityTime;
         });
         let pages = paginated(leaderboard, 10, false, message);
-        paginationEmbed(message, pages, buttons, 10000)
+        paginationEmbed(message, pages, buttons, 100000)
         return;
     }
 
@@ -86,7 +86,7 @@ client.on("messageCreate", async (message) => {
         });
         let pages = paginated(leaderboard, 10, true, message);
         console.log(pages);
-        paginationEmbed(message, pages, buttons, 10000)
+        paginationEmbed(message, pages, buttons, 100000)
         return;
     }
 });
