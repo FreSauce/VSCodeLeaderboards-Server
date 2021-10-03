@@ -6,6 +6,67 @@ const { getUsers, addUser, sendTick, getGlobalUsers } = require("./db");
 const { io } = require("../main");
 const paginationEmbed = require('discordjs-button-pagination');
 
+class pageEmbed {
+    static embeds = [];
+
+    static getEmbed(id) {
+        return pageEmbed.embeds.find(embed => embed.id == id);
+    }
+
+    async constructor(pages, message) {
+        this.id = message.id;
+        this.prevButton = new Discord.MessageButton()
+                                .setLabel("Previous")
+                                .setStyle("red")
+                                .setID("prev")
+                                .setDisabled(true);
+        this.nextButton = new Discord.MessageButton()
+                                .setLabel("Next")
+                                .setStyle("green")
+                                .setID("next");
+
+        this.currentPage = 0;
+        this.pages = pages;
+        this.message = await message.channel.send({embed: pages[this.currentPage], buttons: [this.prevButton, this.nextButton]});
+        pageEmbed.embeds.push(this);
+    }
+
+    async nextPage() {
+        if (this.currentPage < this.pages.length - 1) {
+            this.currentPage++;
+            await editEmbed(this.pages[this.currentPage])
+        }
+        if (this.currentPage == this.pages.length - 1) {
+            this.nextButton.setDisabled(true);
+            this.prevButton.setDisabled(false);
+        }
+        else {
+            this.nextButton.setDisabled(false);
+            this.prevButton.setDisabled(false);
+        }
+    }
+
+    async prevPage() {
+        if (this.currentPage > 0) {
+            this.currentPage--;
+            await editEmbed(this.pages[this.currentPage])
+        }
+        if (this.currentPage == 0) {
+            this.prevButton.setDisabled(true);
+            this.nextButton.setDisabled(false);
+        }
+        else {
+            this.prevButton.setDisabled(false);
+            this.nextButton.setDisabled(false);
+        }
+    }
+
+    async editEmbed(page) {
+        await this.message.edit(page);
+    } 
+}
+
+
 const paginated = (leaderboard, pageLength, isGlobal, message) => {
     const pages = [];
     const author = isGlobal
@@ -85,10 +146,23 @@ client.on("messageCreate", async (message) => {
             return b.activityTime - a.activityTime;
         });
         let pages = paginated(leaderboard, 10, true, message);
-        console.log(pages);
-        paginationEmbed(message, pages, buttons, 100000)
+        // console.log(pages);
+        // paginationEmbed(message, pages, buttons, 100000)
+        await pageEmbed(pages, message);
         return;
     }
 });
+
+client.on('clickButton', async (button) => {
+    const embed = pageEmbed.getEmbed(button.message.id);
+    if(button.id === "prev"){
+      await button.reply.defer()
+      await embed.prevPage();
+    }
+    if(button.id === "next"){
+        await button.reply.defer()
+        await embed.nextPage();
+    }
+  })
 
 client.login(process.env.TOKEN);
