@@ -18,12 +18,12 @@ class pageEmbed {
         this.prevButton = new Discord.MessageButton()
                                 .setLabel("Previous")
                                 .setStyle("red")
-                                .setID("prev")
+                                .setCustomId("prev")
                                 .setDisabled(true);
         this.nextButton = new Discord.MessageButton()
                                 .setLabel("Next")
                                 .setStyle("green")
-                                .setID("next");
+                                .setCustomId("next");
 
         this.currentPage = 0;
         this.pages = pages;
@@ -140,7 +140,9 @@ client.on("messageCreate", async (message) => {
             return b.activityTime - a.activityTime;
         });
         let pages = paginated(leaderboard, 10, false, message);
-        paginationEmbed(message, pages, buttons, 100000)
+        // paginationEmbed(message, pages, buttons, 100000)
+        const embed = new pageEmbed(pages, message);
+        await embed.init();
         return;
     }
 
@@ -152,7 +154,7 @@ client.on("messageCreate", async (message) => {
         let pages = paginated(leaderboard, 10, true, message);
         // console.log(pages);
         // paginationEmbed(message, pages, buttons, 100000)
-        embed = new pageEmbed(pages, message);
+        const embed = new pageEmbed(pages, message);
         await embed.init();
         return;
     }
