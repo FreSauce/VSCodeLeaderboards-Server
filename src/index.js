@@ -27,11 +27,12 @@ class pageEmbed {
 
         this.currentPage = 0;
         this.pages = pages;
+        this.context = message;
         this.message = null;
     }
 
     async init() {
-        this.message = await message.channel.send({embed: pages[this.currentPage], buttons: [this.prevButton, this.nextButton]});
+        this.message = await this.context.channel.send({embed: pages[this.currentPage], buttons: [this.prevButton, this.nextButton]});
         pageEmbed.embeds.push(this);
     }
 
