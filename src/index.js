@@ -174,7 +174,7 @@ client.on("interactionCreate", async (interaction) => {
         if (interaction.customId.slice(0,4) === "prev") {
             console.log("prev")
             embed.prevPage();
-            await interaction.deferUpdate({
+            await interaction.update({
                 embeds: [embed.pages[embed.currentPage]],
                 components: [embed.actionRow],
             })
@@ -182,7 +182,7 @@ client.on("interactionCreate", async (interaction) => {
         if (interaction.customId.slice(0,4) === "next") {
             console.log("next")
             embed.nextPage();
-            await interaction.deferUpdate({
+            await interaction.update({
                 embeds: [embed.pages[embed.currentPage]],
                 components: [embed.actionRow],
             })
