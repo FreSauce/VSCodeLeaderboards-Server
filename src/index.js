@@ -30,8 +30,6 @@ class pageEmbed {
         this.context = message;
         this.message = null;
         console.log("INSIDE THE CLASS");
-        console.log(pages);
-        console.log(this.pages);
     }
 
     async init() {
@@ -145,7 +143,7 @@ client.on("messageCreate", async (message) => {
         });
         let pages = paginated(leaderboard, 10, false, message);
         // paginationEmbed(message, pages, buttons, 100000)
-        const embed = new pageEmbed([...pages], message);
+        const embed = new pageEmbed(pages, message, buttons);
         await embed.init();
         return;
     }
@@ -158,7 +156,7 @@ client.on("messageCreate", async (message) => {
         let pages = paginated(leaderboard, 10, true, message);
         console.log(pages);
         // paginationEmbed(message, pages, buttons, 100000)
-        const embed = new pageEmbed(pages, message);
+        const embed = new pageEmbed(pages, message, buttons);
         await embed.init();
         return;
     }
