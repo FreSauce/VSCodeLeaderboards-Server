@@ -13,7 +13,7 @@ class pageEmbed {
         return pageEmbed.embeds.find((embed) => embed.id == id);
     }
 
-    constructor(pages, message, buttons) {
+    constructor(pages, message, actionRow) {
         this.id = message.id;
         // this.prevButton = new Discord.MessageButton()
         //                         .setLabel("Previous")
@@ -24,22 +24,17 @@ class pageEmbed {
         //                         .setLabel("Next")
         //                         .setStyle("green")
         //                         .setCustomId("next");
-        this.buttons = buttons;
-        console.log("INSIDE THE CLASS");
-        console.log(buttons);
-        console.log(this.buttons);
+        this.actionRow = actionRow;
         this.currentPage = 0;
         this.pages = pages;
         this.context = message;
         this.message = null;
     }
 
-    async init(actionRow) {
-        console.log("Inside init")
-        console.log(this.buttons);
+    async init() {
         this.message = await this.context.channel.send({
             embeds: [this.pages[this.currentPage]],
-            components: [actionRow],
+            components: [this.actionRow],
         });
         pageEmbed.embeds.push(this);
     }
@@ -50,11 +45,11 @@ class pageEmbed {
             await editEmbed(this.pages[this.currentPage]);
         }
         if (this.currentPage == this.pages.length - 1) {
-            this.buttons[1].setDisabled(true);
-            this.buttons[0].setDisabled(false);
+            this.actionRow.components[1].setDisabled(true);
+            this.actionRow.components[0].setDisabled(false);
         } else {
-            this.buttons[1].setDisabled(false);
-            this.buttons[0].setDisabled(false);
+            this.actionRow.components[1].setDisabled(false);
+            this.actionRow.components[0].setDisabled(false);
         }
     }
 
@@ -64,11 +59,11 @@ class pageEmbed {
             await editEmbed(this.pages[this.currentPage]);
         }
         if (this.currentPage == 0) {
-            this.buttons[0].setDisabled(true);
-            this.buttons[1].setDisabled(false);
+            this.actionRow.components[0].setDisabled(true);
+            this.actionRow.components[1].setDisabled(false);
         } else {
-            this.buttons[0].setDisabled(false);
-            this.buttons[1].setDisabled(false);
+            this.actionRow.components[0].setDisabled(false);
+            this.actionRow.components[1].setDisabled(false);
         }
     }
 
@@ -153,8 +148,8 @@ client.on("messageCreate", async (message) => {
         let pages = paginated(leaderboard, 10, false, message);
         // paginationEmbed(message, pages, buttons, 100000)
         console.log(buttons);
-        const embed = new pageEmbed(pages, message, buttons);
-        await embed.init(actionRow);
+        const embed = new pageEmbed(pages, message, actionRow);
+        await embed.init();
         return;
     }
 
@@ -166,22 +161,21 @@ client.on("messageCreate", async (message) => {
         let pages = paginated(leaderboard, 10, true, message);
         console.log(pages);
         // paginationEmbed(message, pages, buttons, 100000)
-        await message.channel.send("TEST BUTTONS", {components: [actionRow]});
-        const embed = new pageEmbed(pages, message, buttons);
-        await embed.init(actionRow);
+        const embed = new pageEmbed(pages, message, actionRow);
+        await embed.init();
         return;
     }
 });
 
-client.on("clickButton", async (button) => {
-    const embed = pageEmbed.getEmbed(button.message.id);
-    if (button.id === "previousbtn") {
-        await button.reply.defer();
-        await embed.prevPage();
-    }
-    if (button.id === "nextbtn") {
-        await button.reply.defer();
-        await embed.nextPage();
+client.on("interactionCreate", async (interaction) => {
+    if (interaction.isButton()) {
+        const embed = pageEmbed.getEmbed(interaction.message.id);
+        if (interaction.customId === "previousbtn") {
+            await embed.prevPage();
+        }
+        if (interaction.customId === "nextbtn") {
+            await embed.nextPage();
+        }
     }
 });
 
