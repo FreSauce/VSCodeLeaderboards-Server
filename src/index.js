@@ -4,13 +4,13 @@ console.log(process.env.TOKEN);
 const client = new Discord.Client({ intents });
 const { getUsers, addUser, sendTick, getGlobalUsers } = require("./db");
 const { io } = require("../main");
-const paginationEmbed = require('discordjs-button-pagination');
+const paginationEmbed = require("discordjs-button-pagination");
 
 class pageEmbed {
     static embeds = [];
 
     static getEmbed(id) {
-        return pageEmbed.embeds.find(embed => embed.id == id);
+        return pageEmbed.embeds.find((embed) => embed.id == id);
     }
 
     constructor(pages, message, buttons) {
@@ -35,20 +35,22 @@ class pageEmbed {
     }
 
     async init() {
-        this.message = await this.context.channel.send({embeds: [this.pages[this.currentPage]], buttons:this.buttons});
+        this.message = await this.context.channel.send({
+            embeds: [this.pages[this.currentPage]],
+            buttons: [this.buttons[0], this.buttons[1]],
+        });
         pageEmbed.embeds.push(this);
     }
 
     async nextPage() {
         if (this.currentPage < this.pages.length - 1) {
             this.currentPage++;
-            await editEmbed(this.pages[this.currentPage])
+            await editEmbed(this.pages[this.currentPage]);
         }
         if (this.currentPage == this.pages.length - 1) {
             this.buttons[1].setDisabled(true);
             this.buttons[0].setDisabled(false);
-        }
-        else {
+        } else {
             this.buttons[1].setDisabled(false);
             this.buttons[0].setDisabled(false);
         }
@@ -57,13 +59,12 @@ class pageEmbed {
     async prevPage() {
         if (this.currentPage > 0) {
             this.currentPage--;
-            await editEmbed(this.pages[this.currentPage])
+            await editEmbed(this.pages[this.currentPage]);
         }
         if (this.currentPage == 0) {
             this.buttons[0].setDisabled(true);
             this.buttons[1].setDisabled(false);
-        }
-        else {
+        } else {
             this.buttons[0].setDisabled(false);
             this.buttons[1].setDisabled(false);
         }
@@ -71,9 +72,8 @@ class pageEmbed {
 
     async editEmbed(page) {
         await this.message.edit(page);
-    } 
+    }
 }
-
 
 const paginated = (leaderboard, pageLength, isGlobal, message) => {
     const pages = [];
@@ -88,11 +88,11 @@ const paginated = (leaderboard, pageLength, isGlobal, message) => {
         let time_spent = "";
         for (
             let j = pageLength * i;
-            j < Math.min((i+1)*pageLength, lblen);
+            j < Math.min((i + 1) * pageLength, lblen);
             j++
         ) {
             const data = leaderboard[j];
-            userNames += `\`${j + 1}\` ${data.userName}\n`;  
+            userNames += `\`${j + 1}\` ${data.userName}\n`;
             time_spent += ` \`${(data.activityTime / 60000).toFixed(2)}\`\n`;
         }
         const pageEmbed = new Discord.MessageEmbed()
@@ -109,14 +109,14 @@ const paginated = (leaderboard, pageLength, isGlobal, message) => {
 
 const buttons = [
     new Discord.MessageButton()
-            .setCustomId("previousbtn")
-            .setLabel("Previous")
-            .setStyle("DANGER"),
+        .setCustomId("previousbtn")
+        .setLabel("Previous")
+        .setStyle("DANGER"),
     new Discord.MessageButton()
-            .setCustomId("nextbtn")
-            .setLabel("Next")
-            .setStyle("SUCCESS")
-]
+        .setCustomId("nextbtn")
+        .setLabel("Next")
+        .setStyle("SUCCESS"),
+];
 
 io.on("connection", (socket) => {
     socket.on("sendTick", (data) => {
@@ -164,16 +164,16 @@ client.on("messageCreate", async (message) => {
     }
 });
 
-client.on('clickButton', async (button) => {
+client.on("clickButton", async (button) => {
     const embed = pageEmbed.getEmbed(button.message.id);
-    if(button.id === "previousbtn"){
-      await button.reply.defer()
-      await embed.prevPage();
+    if (button.id === "previousbtn") {
+        await button.reply.defer();
+        await embed.prevPage();
     }
-    if(button.id === "nextbtn"){
-        await button.reply.defer()
+    if (button.id === "nextbtn") {
+        await button.reply.defer();
         await embed.nextPage();
     }
-  })
+});
 
 client.login(process.env.TOKEN);
