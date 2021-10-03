@@ -27,6 +27,10 @@ class pageEmbed {
 
         this.currentPage = 0;
         this.pages = pages;
+        this.message = null;
+    }
+
+    async init() {
         this.message = await message.channel.send({embed: pages[this.currentPage], buttons: [this.prevButton, this.nextButton]});
         pageEmbed.embeds.push(this);
     }
@@ -148,7 +152,8 @@ client.on("messageCreate", async (message) => {
         let pages = paginated(leaderboard, 10, true, message);
         // console.log(pages);
         // paginationEmbed(message, pages, buttons, 100000)
-        await pageEmbed(pages, message);
+        embed = new pageEmbed(pages, message);
+        await embed.init();
         return;
     }
 });
