@@ -34,7 +34,7 @@ class PageEmbed {
     }
 
     async init() {
-        this.message = await this.context.channel.reply({
+        this.message = await this.context.reply({
             embeds: [this.pages[this.currentPage]],
             components: [this.actionRow],
         });
