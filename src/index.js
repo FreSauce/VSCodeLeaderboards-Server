@@ -13,7 +13,7 @@ class PageEmbed {
         return PageEmbed.embeds[id];
     }
 
-    constructor(pages, message, actionRow) {
+    constructor(pages, message) {
         this.id = PageEmbed.embeds.length;
         this.actionRow = new Discord.MessageActionRow().addComponents(
             new Discord.MessageButton()
@@ -36,7 +36,6 @@ class PageEmbed {
         //                         .setLabel("Next")
         //                         .setStyle("green")
         //                         .setCustomId("next");
-        this.actionRow = actionRow;
         this.currentPage = 0;
         this.pages = pages;
         this.context = message;
