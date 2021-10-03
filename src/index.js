@@ -50,10 +50,10 @@ class PageEmbed {
         PageEmbed.embeds.push(this);
     }
 
-    async nextPage() {
+    nextPage() {
         if (this.currentPage < this.pages.length - 1) {
             this.currentPage++;
-            await this.editEmbed();
+            // await this.editEmbed();
         }
         // if (this.currentPage == this.pages.length - 1) {
         //     this.actionRow.components[1].setDisabled(true);
@@ -64,10 +64,10 @@ class PageEmbed {
         // }
     }
 
-    async prevPage() {
+    prevPage() {
         if (this.currentPage > 0) {
             this.currentPage--;
-            await this.editEmbed();
+            // await this.editEmbed();
         }
         // if (this.currentPage == 0) {
         //     this.actionRow.components[0].setDisabled(true);
@@ -78,12 +78,12 @@ class PageEmbed {
         // }
     }
 
-    async editEmbed() {
-        await this.message.edit({
-            embeds: [this.pages[this.currentPage]],
-            components: [this.actionRow],
-        });
-    }
+    // async editEmbed() {
+    //     await this.message.edit({
+    //         embeds: [this.pages[this.currentPage]],
+    //         components: [this.actionRow],
+    //     });
+    // }
 }
 
 const paginated = (leaderboard, pageLength, isGlobal, message) => {
@@ -173,11 +173,19 @@ client.on("interactionCreate", async (interaction) => {
         console.log(id)
         if (interaction.customId.slice(0,4) === "prev") {
             console.log("prev")
-            await embed.prevPage();
+            embed.prevPage();
+            await interaction.deferUpdate({
+                embeds: [embed.pages[embed.currentPage]],
+                components: [embed.actionRow],
+            })
         }
         if (interaction.customId.slice(0,4) === "next") {
             console.log("next")
-            await embed.nextPage();
+            embed.nextPage();
+            await interaction.deferUpdate({
+                embeds: [embed.pages[embed.currentPage]],
+                components: [embed.actionRow],
+            })
         }
     }
 });
