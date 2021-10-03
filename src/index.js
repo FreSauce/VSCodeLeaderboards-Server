@@ -13,18 +13,18 @@ class pageEmbed {
         return pageEmbed.embeds.find(embed => embed.id == id);
     }
 
-    constructor(pages, message) {
+    constructor(pages, message, buttons) {
         this.id = message.id;
-        this.prevButton = new Discord.MessageButton()
-                                .setLabel("Previous")
-                                .setStyle("red")
-                                .setCustomId("prev")
-                                .setDisabled(true);
-        this.nextButton = new Discord.MessageButton()
-                                .setLabel("Next")
-                                .setStyle("green")
-                                .setCustomId("next");
-
+        // this.prevButton = new Discord.MessageButton()
+        //                         .setLabel("Previous")
+        //                         .setStyle("red")
+        //                         .setCustomId("prev")
+        //                         .setDisabled(true);
+        // this.nextButton = new Discord.MessageButton()
+        //                         .setLabel("Next")
+        //                         .setStyle("green")
+        //                         .setCustomId("next");
+        this.buttons = buttons;
         this.currentPage = 0;
         this.pages = pages;
         this.context = message;
@@ -35,7 +35,7 @@ class pageEmbed {
     }
 
     async init() {
-        this.message = await this.context.channel.send({embeds: [this.pages[this.currentPage]], buttons: [this.prevButton, this.nextButton]});
+        this.message = await this.context.channel.send({embeds: [this.pages[this.currentPage]], buttons:this.buttons});
         pageEmbed.embeds.push(this);
     }
 
@@ -45,12 +45,12 @@ class pageEmbed {
             await editEmbed(this.pages[this.currentPage])
         }
         if (this.currentPage == this.pages.length - 1) {
-            this.nextButton.setDisabled(true);
-            this.prevButton.setDisabled(false);
+            this.buttons[1].setDisabled(true);
+            this.buttons[0].setDisabled(false);
         }
         else {
-            this.nextButton.setDisabled(false);
-            this.prevButton.setDisabled(false);
+            this.buttons[1].setDisabled(false);
+            this.buttons[0].setDisabled(false);
         }
     }
 
@@ -60,12 +60,12 @@ class pageEmbed {
             await editEmbed(this.pages[this.currentPage])
         }
         if (this.currentPage == 0) {
-            this.prevButton.setDisabled(true);
-            this.nextButton.setDisabled(false);
+            this.buttons[0].setDisabled(true);
+            this.buttons[1].setDisabled(false);
         }
         else {
-            this.prevButton.setDisabled(false);
-            this.nextButton.setDisabled(false);
+            this.buttons[0].setDisabled(false);
+            this.buttons[1].setDisabled(false);
         }
     }
 
@@ -166,11 +166,11 @@ client.on("messageCreate", async (message) => {
 
 client.on('clickButton', async (button) => {
     const embed = pageEmbed.getEmbed(button.message.id);
-    if(button.id === "prev"){
+    if(button.id === "previousbtn"){
       await button.reply.defer()
       await embed.prevPage();
     }
-    if(button.id === "next"){
+    if(button.id === "nextbtn"){
         await button.reply.defer()
         await embed.nextPage();
     }
