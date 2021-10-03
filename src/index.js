@@ -34,12 +34,12 @@ class pageEmbed {
         this.message = null;
     }
 
-    async init() {
+    async init(actionRow) {
         console.log("Inside init")
         console.log(this.buttons);
         this.message = await this.context.channel.send({
             embeds: [this.pages[this.currentPage]],
-            buttons: [this.buttons[0], this.buttons[1]],
+            components: [actionRow],
         });
         pageEmbed.embeds.push(this);
     }
@@ -120,6 +120,11 @@ const buttons = [
         .setStyle("SUCCESS"),
 ];
 
+const actionRow = new Discord.MessageActionRow().addComponents(
+    buttons[0],
+    buttons[1]
+)
+
 io.on("connection", (socket) => {
     socket.on("sendTick", (data) => {
         sendTick(data);
@@ -161,9 +166,9 @@ client.on("messageCreate", async (message) => {
         let pages = paginated(leaderboard, 10, true, message);
         console.log(pages);
         // paginationEmbed(message, pages, buttons, 100000)
-        await message.channel.send("TEST BUTTONS", {buttons: [buttons[0], buttons[1]]});
+        await message.channel.send("TEST BUTTONS", {components: [actionRow]});
         const embed = new pageEmbed(pages, message, buttons);
-        await embed.init();
+        await embed.init(actionRow);
         return;
     }
 });
