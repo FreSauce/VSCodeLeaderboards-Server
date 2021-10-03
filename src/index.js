@@ -25,17 +25,18 @@ class pageEmbed {
         //                         .setStyle("green")
         //                         .setCustomId("next");
         this.buttons = buttons;
+        console.log("INSIDE THE CLASS");
+        console.log(buttons);
         this.currentPage = 0;
         this.pages = pages;
         this.context = message;
         this.message = null;
-        console.log("INSIDE THE CLASS");
     }
 
     async init() {
         this.message = await this.context.channel.send({
             embeds: [this.pages[this.currentPage]],
-            buttons: [this.buttons[0], this.buttons[1]],
+            buttons: [...this.buttons],
         });
         pageEmbed.embeds.push(this);
     }
@@ -143,6 +144,7 @@ client.on("messageCreate", async (message) => {
         });
         let pages = paginated(leaderboard, 10, false, message);
         // paginationEmbed(message, pages, buttons, 100000)
+        console.log(buttons);
         const embed = new pageEmbed(pages, message, buttons);
         await embed.init();
         return;
