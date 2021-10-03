@@ -53,7 +53,7 @@ class PageEmbed {
     async nextPage() {
         if (this.currentPage < this.pages.length - 1) {
             this.currentPage++;
-            await editEmbed();
+            await this.editEmbed();
         }
         // if (this.currentPage == this.pages.length - 1) {
         //     this.actionRow.components[1].setDisabled(true);
@@ -67,7 +67,7 @@ class PageEmbed {
     async prevPage() {
         if (this.currentPage > 0) {
             this.currentPage--;
-            await editEmbed();
+            await this.editEmbed();
         }
         // if (this.currentPage == 0) {
         //     this.actionRow.components[0].setDisabled(true);
