@@ -27,6 +27,7 @@ class pageEmbed {
         this.buttons = buttons;
         console.log("INSIDE THE CLASS");
         console.log(buttons);
+        console.log(this.buttons);
         this.currentPage = 0;
         this.pages = pages;
         this.context = message;
@@ -34,9 +35,11 @@ class pageEmbed {
     }
 
     async init() {
+        console.log("Inside init")
+        console.log(this.buttons);
         this.message = await this.context.channel.send({
             embeds: [this.pages[this.currentPage]],
-            buttons: [...this.buttons],
+            buttons: [this.buttons[0], this.buttons[1]],
         });
         pageEmbed.embeds.push(this);
     }
