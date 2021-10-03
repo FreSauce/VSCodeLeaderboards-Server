@@ -6,15 +6,25 @@ const { getUsers, addUser, sendTick, getGlobalUsers } = require("./db");
 const { io } = require("../main");
 const paginationEmbed = require("discordjs-button-pagination");
 
-class pageEmbed {
+class PageEmbed {
     static embeds = [];
 
     static getEmbed(id) {
-        return pageEmbed.embeds.find((embed) => embed.id == id);
+        return PageEmbed.embeds[id];
     }
 
     constructor(pages, message, actionRow) {
-        this.id = message.author.id;
+        this.id = PageEmbed.embeds.length;
+        this.actionRow = new Discord.MessageActionRow().addComponents(
+            new Discord.MessageButton()
+                .setCustomId(`prev${this.id}`)
+                .setLabel("Previous")
+                .setStyle("DANGER"),
+            new Discord.MessageButton()
+                .setCustomId(`next${this.id}`)
+                .setLabel("Next")
+                .setStyle("SUCCESS")
+        );
         console.log("hahaha id is")
         console.log(this.id)
         // this.prevButton = new Discord.MessageButton()
@@ -38,7 +48,7 @@ class pageEmbed {
             embeds: [this.pages[this.currentPage]],
             components: [this.actionRow],
         });
-        pageEmbed.embeds.push(this);
+        PageEmbed.embeds.push(this);
     }
 
     async nextPage() {
@@ -124,16 +134,6 @@ client.on("ready", async () => {
 });
 
 client.on("messageCreate", async (message) => {
-    const actionRow = new Discord.MessageActionRow().addComponents(
-        new Discord.MessageButton()
-            .setCustomId("previousbtn")
-            .setLabel("Previous")
-            .setStyle("DANGER"),
-        new Discord.MessageButton()
-            .setCustomId("nextbtn")
-            .setLabel("Next")
-            .setStyle("SUCCESS")
-    );
     if (message.content === "#vslb") {
         const userList = await (
             await message.guild.members.fetch()
@@ -145,7 +145,7 @@ client.on("messageCreate", async (message) => {
         });
         let pages = paginated(leaderboard, 10, false, message);
         // paginationEmbed(message, pages, buttons, 100000)
-        const embed = new pageEmbed(pages, message, actionRow);
+        const embed = new PageEmbed(pages, message);
         await embed.init();
         return;
     }
@@ -157,7 +157,7 @@ client.on("messageCreate", async (message) => {
         });
         let pages = paginated(leaderboard, 10, true, message);
         // paginationEmbed(message, pages, buttons, 100000)
-        const embed = new pageEmbed(pages, message, actionRow);
+        const embed = new PageEmbed(pages, message);
         await embed.init();
         return;
     }
@@ -165,13 +165,14 @@ client.on("messageCreate", async (message) => {
 
 client.on("interactionCreate", async (interaction) => {
     if (interaction.isButton()) {
-        const embed = pageEmbed.getEmbed(interaction.message.id);
+        const id = int(interaction.customId.slice(4, interaction.customId.length));
+        const embed = PageEmbed.getEmbed(id);
         console.log("interaction id is ")
-        console.log(interaction.message.author.id)
-        if (interaction.customId === "previousbtn") {
+        console.log(id)
+        if (interaction.customId.slice(0,4) === "prev") {
             await embed.prevPage();
         }
-        if (interaction.customId === "nextbtn") {
+        if (interaction.customId.slice(0,4) === "next") {
             await embed.nextPage();
         }
     }
