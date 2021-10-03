@@ -79,7 +79,10 @@ class PageEmbed {
     }
 
     async editEmbed() {
-        await this.message.edit(this.pages[this.currentPage]);
+        await this.message.edit({
+            embeds: [this.pages[this.currentPage]],
+            components: [this.actionRow],
+        });
     }
 }
 
@@ -169,9 +172,11 @@ client.on("interactionCreate", async (interaction) => {
         console.log("interaction id is ")
         console.log(id)
         if (interaction.customId.slice(0,4) === "prev") {
+            console.log("prev")
             await embed.prevPage();
         }
         if (interaction.customId.slice(0,4) === "next") {
+            console.log("next")
             await embed.nextPage();
         }
     }
