@@ -143,7 +143,6 @@ client.on("messageCreate", async (message) => {
         });
         let pages = paginated(leaderboard, 10, false, message);
         // paginationEmbed(message, pages, buttons, 100000)
-        console.log(buttons);
         const embed = new pageEmbed(pages, message, actionRow);
         await embed.init();
         return;
@@ -155,7 +154,6 @@ client.on("messageCreate", async (message) => {
             return b.activityTime - a.activityTime;
         });
         let pages = paginated(leaderboard, 10, true, message);
-        console.log(pages);
         // paginationEmbed(message, pages, buttons, 100000)
         const embed = new pageEmbed(pages, message, actionRow);
         await embed.init();
