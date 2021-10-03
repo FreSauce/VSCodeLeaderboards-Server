@@ -161,6 +161,7 @@ client.on("messageCreate", async (message) => {
         let pages = paginated(leaderboard, 10, true, message);
         console.log(pages);
         // paginationEmbed(message, pages, buttons, 100000)
+        await message.channel.send("TEST BUTTONS", {buttons: [buttons[0], buttons[1]]});
         const embed = new pageEmbed(pages, message, buttons);
         await embed.init();
         return;
