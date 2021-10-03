@@ -13,7 +13,7 @@ class pageEmbed {
         return pageEmbed.embeds.find(embed => embed.id == id);
     }
 
-    async constructor(pages, message) {
+    constructor(pages, message) {
         this.id = message.id;
         this.prevButton = new Discord.MessageButton()
                                 .setLabel("Previous")
