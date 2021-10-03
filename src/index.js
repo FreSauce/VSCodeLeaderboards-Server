@@ -39,7 +39,6 @@ class PageEmbed {
             components: [this.actionRow],
         });
         PageEmbed.embeds.push(this);
-        setTimeout(this.delete, 120000);
     }
 
     nextPage() {
@@ -68,9 +67,6 @@ class PageEmbed {
             this.actionRow.components[0].setDisabled(false);
             this.actionRow.components[1].setDisabled(false);
         }
-    }
-    delete() {
-        this.message.delete();
     }
 }
 
