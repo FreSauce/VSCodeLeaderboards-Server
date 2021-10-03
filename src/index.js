@@ -14,7 +14,7 @@ class pageEmbed {
     }
 
     constructor(pages, message, actionRow) {
-        this.id = message.id;
+        this.id = message.author.id;
         console.log("hahaha id is")
         console.log(this.id)
         // this.prevButton = new Discord.MessageButton()
@@ -167,7 +167,7 @@ client.on("interactionCreate", async (interaction) => {
     if (interaction.isButton()) {
         const embed = pageEmbed.getEmbed(interaction.message.id);
         console.log("interaction id is ")
-        console.log(interaction.message.id)
+        console.log(interaction.message.author.id)
         if (interaction.customId === "previousbtn") {
             await embed.prevPage();
         }
