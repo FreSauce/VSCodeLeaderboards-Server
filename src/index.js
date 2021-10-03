@@ -104,21 +104,7 @@ const paginated = (leaderboard, pageLength, isGlobal, message) => {
     return pages;
 };
 
-const buttons = [
-    new Discord.MessageButton()
-        .setCustomId("previousbtn")
-        .setLabel("Previous")
-        .setStyle("DANGER"),
-    new Discord.MessageButton()
-        .setCustomId("nextbtn")
-        .setLabel("Next")
-        .setStyle("SUCCESS"),
-];
 
-const actionRow = new Discord.MessageActionRow().addComponents(
-    buttons[0],
-    buttons[1]
-)
 
 io.on("connection", (socket) => {
     socket.on("sendTick", (data) => {
@@ -136,6 +122,16 @@ client.on("ready", async () => {
 });
 
 client.on("messageCreate", async (message) => {
+    const actionRow = new Discord.MessageActionRow().addComponents(
+        new Discord.MessageButton()
+            .setCustomId("previousbtn")
+            .setLabel("Previous")
+            .setStyle("DANGER"),
+        new Discord.MessageButton()
+            .setCustomId("nextbtn")
+            .setLabel("Next")
+            .setStyle("SUCCESS")
+    );
     if (message.content === "#vslb") {
         const userList = await (
             await message.guild.members.fetch()
