@@ -25,17 +25,8 @@ class PageEmbed {
                 .setLabel("Next")
                 .setStyle("SUCCESS")
         );
-        console.log("hahaha id is")
-        console.log(this.id)
-        // this.prevButton = new Discord.MessageButton()
-        //                         .setLabel("Previous")
-        //                         .setStyle("red")
-        //                         .setCustomId("prev")
-        //                         .setDisabled(true);
-        // this.nextButton = new Discord.MessageButton()
-        //                         .setLabel("Next")
-        //                         .setStyle("green")
-        //                         .setCustomId("next");
+        console.log("hahaha id is");
+        console.log(this.id);
         this.currentPage = 0;
         this.pages = pages;
         this.context = message;
@@ -55,13 +46,13 @@ class PageEmbed {
             this.currentPage++;
             // await this.editEmbed();
         }
-        // if (this.currentPage == this.pages.length - 1) {
-        //     this.actionRow.components[1].setDisabled(true);
-        //     this.actionRow.components[0].setDisabled(false);
-        // } else {
-        //     this.actionRow.components[1].setDisabled(false);
-        //     this.actionRow.components[0].setDisabled(false);
-        // }
+        if (this.currentPage == this.pages.length - 1) {
+            this.actionRow.components[1].setDisabled(true);
+            this.actionRow.components[0].setDisabled(false);
+        } else {
+            this.actionRow.components[1].setDisabled(false);
+            this.actionRow.components[0].setDisabled(false);
+        }
     }
 
     prevPage() {
@@ -69,21 +60,14 @@ class PageEmbed {
             this.currentPage--;
             // await this.editEmbed();
         }
-        // if (this.currentPage == 0) {
-        //     this.actionRow.components[0].setDisabled(true);
-        //     this.actionRow.components[1].setDisabled(false);
-        // } else {
-        //     this.actionRow.components[0].setDisabled(false);
-        //     this.actionRow.components[1].setDisabled(false);
-        // }
+        if (this.currentPage == 0) {
+            this.actionRow.components[0].setDisabled(true);
+            this.actionRow.components[1].setDisabled(false);
+        } else {
+            this.actionRow.components[0].setDisabled(false);
+            this.actionRow.components[1].setDisabled(false);
+        }
     }
-
-    // async editEmbed() {
-    //     await this.message.edit({
-    //         embeds: [this.pages[this.currentPage]],
-    //         components: [this.actionRow],
-    //     });
-    // }
 }
 
 const paginated = (leaderboard, pageLength, isGlobal, message) => {
@@ -117,8 +101,6 @@ const paginated = (leaderboard, pageLength, isGlobal, message) => {
     }
     return pages;
 };
-
-
 
 io.on("connection", (socket) => {
     socket.on("sendTick", (data) => {
@@ -167,25 +149,27 @@ client.on("messageCreate", async (message) => {
 
 client.on("interactionCreate", async (interaction) => {
     if (interaction.isButton()) {
-        const id = parseInt(interaction.customId.slice(4, interaction.customId.length));
+        const id = parseInt(
+            interaction.customId.slice(4, interaction.customId.length)
+        );
         const embed = PageEmbed.getEmbed(id);
-        console.log("interaction id is ")
-        console.log(id)
-        if (interaction.customId.slice(0,4) === "prev") {
-            console.log("prev")
+        console.log("interaction id is ");
+        console.log(id);
+        if (interaction.customId.slice(0, 4) === "prev") {
+            console.log("prev");
             embed.prevPage();
             await interaction.update({
                 embeds: [embed.pages[embed.currentPage]],
                 components: [embed.actionRow],
-            })
+            });
         }
-        if (interaction.customId.slice(0,4) === "next") {
-            console.log("next")
+        if (interaction.customId.slice(0, 4) === "next") {
+            console.log("next");
             embed.nextPage();
             await interaction.update({
                 embeds: [embed.pages[embed.currentPage]],
                 components: [embed.actionRow],
-            })
+            });
         }
     }
 });
