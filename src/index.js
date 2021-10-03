@@ -34,11 +34,12 @@ class PageEmbed {
     }
 
     async init() {
-        this.message = await this.context.channel.send({
+        this.message = await this.context.channel.reply({
             embeds: [this.pages[this.currentPage]],
             components: [this.actionRow],
         });
         PageEmbed.embeds.push(this);
+        setTimeout(this.message.delete(), 120000);
     }
 
     nextPage() {
