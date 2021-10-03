@@ -164,7 +164,7 @@ client.on("messageCreate", async (message) => {
 
 client.on("interactionCreate", async (interaction) => {
     if (interaction.isButton()) {
-        const id = int(interaction.customId.slice(4, interaction.customId.length));
+        const id = parseInt(interaction.customId.slice(4, interaction.customId.length));
         const embed = PageEmbed.getEmbed(id);
         console.log("interaction id is ")
         console.log(id)
