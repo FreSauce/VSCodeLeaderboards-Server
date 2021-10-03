@@ -154,7 +154,7 @@ client.on("messageCreate", async (message) => {
         // paginationEmbed(message, pages, buttons, 100000)
         console.log(buttons);
         const embed = new pageEmbed(pages, message, buttons);
-        await embed.init();
+        await embed.init(actionRow);
         return;
     }
 
