@@ -114,7 +114,7 @@ io.on("connection", (socket) => {
 
 client.on("ready", async () => {
     console.log("Ready!");
-    client.user.setActivity("I am watching you all");
+    client.user.setActivity("I am watching you all, #help to beg for help...");
 });
 
 client.on("messageCreate", async (message) => {
@@ -144,6 +144,18 @@ client.on("messageCreate", async (message) => {
         const embed = new PageEmbed(pages, message);
         await embed.init();
         return;
+    }
+
+    if (message.content == "#help") {
+        const embed = new Discord.MessageEmbed()
+            .setColor(0xe1abfb)
+            .setTitle("VSLB")
+            .setDescription("VSLB is a bot that tracks how much time you spend in voice channels.\n\nUse #vslb to get your own leaderboard.\n\nUse #vslb global to get the global leaderboard.")
+            .addFields(
+                { name: "Commands", value: "#vslb\n#vslb global" },
+                { name: "Help", value: "#help" }
+            );
+        await message.reply({ embed });
     }
 });
 
