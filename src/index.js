@@ -146,7 +146,7 @@ client.on("messageCreate", async (message) => {
         return;
     }
 
-    if (message.content == "#help") {
+    if (message.content === "#help") {
         const embed = new Discord.MessageEmbed()
             .setColor(0xe1abfb)
             .setTitle("VSLB")
@@ -155,7 +155,7 @@ client.on("messageCreate", async (message) => {
                 { name: "Commands", value: "#vslb\n#vslb global" },
                 { name: "Help", value: "#help" }
             );
-        await message.reply({ embed });
+        await message.reply({ embeds: [embed] });
     }
 });
 
