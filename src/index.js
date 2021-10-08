@@ -157,6 +157,12 @@ client.on("messageCreate", async (message) => {
             );
         await message.reply({ embeds: [embed] });
     }
+
+    if (message.content === "#gestapo") {
+        message.channel.send("Heil Hitler", {
+            tts: true
+        });
+    }
 });
 
 client.on("interactionCreate", async (interaction) => {
