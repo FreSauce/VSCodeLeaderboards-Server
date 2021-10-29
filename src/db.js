@@ -26,6 +26,7 @@ const sendTick = async (data) => {
   }
   let timeOffset = time - lastTime;
   const collection = client.db("userdata").collection("users");
+
   collection.updateOne(
     { userId: userId },
     { $inc: { activityTime: timeOffset } },
@@ -37,7 +38,18 @@ const sendTick = async (data) => {
   );
   collection.updateOne(
     { userId: userId },
+    { monthlyTime: { $exists: true, $ne: null } },
     { $inc: { monthlyTime: timeOffset } },
+    (err, result) => {
+      if (err) {
+        console.log(err);
+      }
+    }
+  );
+  collection.updateOne(
+    { userId: userId },
+    { monthlyTime: { $exists: false } },
+    { $set: { monthlyTime: timeOffset } },
     (err, result) => {
       if (err) {
         console.log(err);
