@@ -38,7 +38,6 @@ const sendTick = async (data) => {
   );
   collection.updateOne(
     { userId: userId },
-    { monthlyTime: { $exists: true, $ne: null } },
     { $inc: { monthlyTime: timeOffset } },
     (err, result) => {
       if (err) {
@@ -46,16 +45,15 @@ const sendTick = async (data) => {
       }
     }
   );
-  collection.updateOne(
-    { userId: userId },
-    { monthlyTime: { $exists: false } },
-    { $set: { monthlyTime: timeOffset } },
-    (err, result) => {
-      if (err) {
-        console.log(err);
-      }
+};
+
+const resetMonthly = async () => {
+  const collection = client.db("userdata").collection("users");
+  collection.update({}, { $set: { monthlyTime: 0 } }, (err, result) => {
+    if (err) {
+      console.log(err);
     }
-  );
+  });
 };
 
 const getUsers = async (serverlist) => {
@@ -74,4 +72,4 @@ const getGlobalUsers = async () => {
   return res;
 };
 
-module.exports = { addUser, sendTick, getUsers, getGlobalUsers };
+module.exports = { addUser, resetMonthly, sendTick, getUsers, getGlobalUsers };

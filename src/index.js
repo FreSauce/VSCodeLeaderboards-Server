@@ -2,9 +2,17 @@ const Discord = require("discord.js");
 const intents = new Discord.Intents(32767);
 console.log(process.env.TOKEN);
 const client = new Discord.Client({ intents });
-const { getUsers, addUser, sendTick, getGlobalUsers } = require("./db");
+const {
+  getUsers,
+  addUser,
+  sendTick,
+  getGlobalUsers,
+  resetMonthly,
+} = require("./db");
 const { io } = require("../main");
 const paginationEmbed = require("discordjs-button-pagination");
+
+resetMonthly();
 
 class PageEmbed {
   static embeds = [];
