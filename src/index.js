@@ -76,7 +76,7 @@ class PageEmbed {
   }
 }
 
-const paginated = (leaderboard, pageLength, isGlobal, message) => {
+const paginated = (leaderboard, pageLength, isGlobal, message, isMonthly) => {
   const pages = [];
   const author = isGlobal
     ? "Global Leaderboards"
@@ -94,7 +94,11 @@ const paginated = (leaderboard, pageLength, isGlobal, message) => {
     ) {
       const data = leaderboard[j];
       userNames += `\`${j + 1}\` ${data.userName}\n`;
-      time_spent += ` \`${(data.monthlyTime / 60000).toFixed(2)}\`\n`;
+      if (isMonthly) {
+        time_spent += ` \`${(data.monthlyTime / 60000).toFixed(2)}\`\n`;
+      } else {
+        time_spent += ` \`${(data.activityTime / 60000).toFixed(2)}\`\n`;
+      }
     }
     const pageEmbed = new Discord.MessageEmbed()
       .setAuthor(author, iconURL)
@@ -119,7 +123,6 @@ io.on("connection", (socket) => {
 });
 
 client.on("ready", async () => {
-  resetMonthly();
   console.log("Ready!");
   client.user.setActivity("I am watching you all, #help to beg for help...");
 });
@@ -134,7 +137,23 @@ client.on("messageCreate", async (message) => {
     leaderboard.sort((a, b) => {
       return b.activityTime - a.activityTime;
     });
-    let pages = paginated(leaderboard, 10, false, message);
+    let pages = paginated(leaderboard, 10, false, message, false);
+    // paginationEmbed(message, pages, buttons, 100000)
+    const embed = new PageEmbed(pages, message);
+    await embed.init();
+    return;
+  }
+
+  if (message.content === "#vslb monthly") {
+    const userList = await (
+      await message.guild.members.fetch()
+    ).map((member) => member.id);
+    const leaderboard = await getUsers(userList);
+
+    leaderboard.sort((a, b) => {
+      return b.activityTime - a.activityTime;
+    });
+    let pages = paginated(leaderboard, 10, false, message, true);
     // paginationEmbed(message, pages, buttons, 100000)
     const embed = new PageEmbed(pages, message);
     await embed.init();
@@ -146,7 +165,19 @@ client.on("messageCreate", async (message) => {
     leaderboard.sort((a, b) => {
       return b.activityTime - a.activityTime;
     });
-    let pages = paginated(leaderboard, 10, true, message);
+    let pages = paginated(leaderboard, 10, true, message, false);
+    // paginationEmbed(message, pages, buttons, 100000)
+    const embed = new PageEmbed(pages, message);
+    await embed.init();
+    return;
+  }
+
+  if (message.content === "#vslb global monthly") {
+    const leaderboard = await getGlobalUsers();
+    leaderboard.sort((a, b) => {
+      return b.activityTime - a.activityTime;
+    });
+    let pages = paginated(leaderboard, 10, true, message, true);
     // paginationEmbed(message, pages, buttons, 100000)
     const embed = new PageEmbed(pages, message);
     await embed.init();
