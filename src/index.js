@@ -12,8 +12,6 @@ const {
 const { io } = require("../main");
 const paginationEmbed = require("discordjs-button-pagination");
 
-resetMonthly();
-
 class PageEmbed {
   static embeds = [];
 
@@ -121,6 +119,7 @@ io.on("connection", (socket) => {
 });
 
 client.on("ready", async () => {
+  resetMonthly();
   console.log("Ready!");
   client.user.setActivity("I am watching you all, #help to beg for help...");
 });
