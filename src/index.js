@@ -151,7 +151,7 @@ client.on("messageCreate", async (message) => {
     const leaderboard = await getUsers(userList);
 
     leaderboard.sort((a, b) => {
-      return b.activityTime - a.activityTime;
+      return b.monthlyTime - a.monthlyTime;
     });
     let pages = paginated(leaderboard, 10, false, message, true);
     // paginationEmbed(message, pages, buttons, 100000)
@@ -175,7 +175,7 @@ client.on("messageCreate", async (message) => {
   if (message.content === "#vslb global monthly") {
     const leaderboard = await getGlobalUsers();
     leaderboard.sort((a, b) => {
-      return b.activityTime - a.activityTime;
+      return b.monthlyTime - a.monthlyTime;
     });
     let pages = paginated(leaderboard, 10, true, message, true);
     // paginationEmbed(message, pages, buttons, 100000)
@@ -189,10 +189,13 @@ client.on("messageCreate", async (message) => {
       .setColor(0xe1abfb)
       .setTitle("VSLB")
       .setDescription(
-        "VSLB is a bot that tracks how much time you spend in VSCode coding.\n\nUse #vslb to get your own leaderboard.\n\nUse #vslb global to get the global leaderboard."
+        "VSLB is a bot that tracks how much time you spend in VSCode coding.\n\nUse #vslb to get your own leaderboard.\n\nUse #vslb global to get the global leaderboard.\n\nUse #vslb monthly and #vslb global monthly to get monthly leaderboards."
       )
       .addFields(
-        { name: "Commands", value: "#vslb\n#vslb global" },
+        {
+          name: "Commands",
+          value: "#vslb\n#vslb global\n#vslb monthly\n#vslb global monthly",
+        },
         { name: "Help", value: "#help" }
       );
     await message.reply({ embeds: [embed] });
