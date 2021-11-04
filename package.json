@@ -1,7 +1,5 @@
 {
   "dependencies": {
-    "discord.js": "^13.1.0",
-    "discordjs-button-pagination": "^1.0.7",
     "express": "^4.17.1",
     "mongodb": "^4.1.2",
     "socket.io": "^4.2.0"
@@ -15,7 +13,7 @@
   "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node src/index.js"
+    "start": "node main.js"
   },
   "author": "",
   "license": "ISC",
